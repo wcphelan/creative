@@ -77,6 +77,126 @@
       border-left: 1.5px solid #9A4632;
       padding-left: 0.875rem;
     }
+    <style>
+  /* Hide scrollbar for clean horizontal gallery scrolling */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script>
+  // Exposure Shoot Data — Swap titles, descriptions, and images/ filenames here
+  const exposureShoots = [
+    {
+      kicker: "Field Essay [01 / 04] — Wind River Range",
+      title: "Wind River High Route",
+      desc: "Five days above treeline testing ultralight shelter systems and alpine shells. Framed with clean negative space for web hero banners and 4:5 paid social crops.",
+      deliverable: "45 Selects / Natural Light",
+      images: [
+        "https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=1800&q=85"
+      ]
+    },
+    {
+      kicker: "Field Essay [02 / 04] — Jackson Hole, WY",
+      title: "Teton Dawn Patrol",
+      desc: "Pre-sunrise backcountry ski touring in sub-zero conditions. Built to showcase technical outerwear durability and unscripted winter movement.",
+      deliverable: "60 Selects / High-Speed Action",
+      images: [
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1800&q=85"
+      ]
+    },
+    {
+      kicker: "Field Essay [03 / 04] — Canyonlands, UT",
+      title: "Desert Tower Reconnaissance",
+      desc: "Managing harsh midday desert contrast and warm sandstone bounce light—capturing hardware, rope systems, and camp life across a four-day bivouac.",
+      deliverable: "50 Selects / Natural + Strobe",
+      images: [
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1800&q=85"
+      ]
+    },
+    {
+      kicker: "Field Essay [04 / 04] — Sawtooth Wilderness",
+      title: "Sawtooth Alpine Camp",
+      desc: "Quiet morning rituals and tactile gear details shot for lifecycle email flows, editorial lookbooks, and product detail pages.",
+      deliverable: "35 Selects / Detail & Lifestyle",
+      images: [
+        "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?auto=format&fit=crop&w=1800&q=85",
+        "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?auto=format&fit=crop&w=1800&q=85"
+      ]
+    }
+  ];
+
+  const reel = document.getElementById('shoot-reel');
+  const slideCounter = document.getElementById('slide-counter');
+  const tabs = document.querySelectorAll('.shoot-tab');
+
+  // Switch Shoot Story
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = parseInt(tab.dataset.shoot, 10);
+      const data = exposureShoots[idx];
+
+      // Update Tab Active Styles
+      tabs.forEach(t => {
+        t.classList.remove('border-rust', 'text-stone-900', 'font-medium');
+        t.classList.add('border-transparent', 'text-stone-800/50');
+      });
+      tab.classList.add('border-rust', 'text-stone-900', 'font-medium');
+      tab.classList.remove('border-transparent', 'text-stone-800/50');
+
+      // Update Top-Left Corner Box
+      document.getElementById('shoot-kicker').textContent = data.kicker;
+      document.getElementById('shoot-title').textContent = data.title;
+      document.getElementById('shoot-desc').textContent = data.desc;
+      document.getElementById('shoot-deliverable').textContent = `Deliverable: ${data.deliverable}`;
+
+      // Update 3 Images & Reset Scroll Position
+      document.getElementById('shoot-img-1').src = data.images[0];
+      document.getElementById('shoot-img-2').src = data.images[1];
+      document.getElementById('shoot-img-3').src = data.images[2];
+      reel.scrollTo({ left: 0, behavior: 'smooth' });
+      slideCounter.textContent = "1 / 3";
+    });
+  });
+
+  // Arrow Navigation & Slide Counter Sync
+  const getSlideWidth = () => reel.querySelector('.reel-slide').offsetWidth;
+
+  document.getElementById('reel-next').addEventListener('click', () => {
+    const step = getSlideWidth();
+    if (reel.scrollLeft + reel.clientWidth >= reel.scrollWidth - 10) {
+      reel.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      reel.scrollBy({ left: step, behavior: 'smooth' });
+    }
+  });
+
+  document.getElementById('reel-prev').addEventListener('click', () => {
+    const step = getSlideWidth();
+    if (reel.scrollLeft <= 10) {
+      reel.scrollTo({ left: reel.scrollWidth, behavior: 'smooth' });
+    } else {
+      reel.scrollBy({ left: -step, behavior: 'smooth' });
+    }
+  });
+
+  reel.addEventListener('scroll', () => {
+    const step = getSlideWidth();
+    const currentSlide = Math.min(3, Math.max(1, Math.round(reel.scrollLeft / step) + 1));
+    slideCounter.textContent = `${currentSlide} / 3`;
+  });
+</script>
   </style>
 </head>
 <body class="bg-stone-50 text-stone-900 font-sans antialiased selection:bg-pine selection:text-stone-50">
@@ -144,118 +264,95 @@
   </section>
 
   <!-- CHAPTER 01: PERSONAL & OUTDOOR LIFESTYLE WORK (EXPOSURE SHOWCASE) -->
-  <section id="field-work" class="py-24 md:py-36 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-stone-200">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
-      <div class="lg:col-span-5 reveal">
-        <span class="font-mono text-xs tracking-widest uppercase text-rust">01 / Field &amp; Brand Work</span>
-        <h2 class="font-serif text-4xl md:text-5xl mt-3 leading-tight">
-          Earned light, lived-in gear, and unscripted environments.
-        </h2>
-      </div>
-      <div class="lg:col-span-6 lg:col-start-7 reveal">
-        <p class="text-stone-800/80 text-base md:text-lg font-light leading-relaxed mb-6">
-          Customers spot staged outdoor photography immediately. Drawn from my personal and commercial expeditions across the Mountain West, this body of work prioritizes real weather, authentic movement, and tactile detail—putting products in environments where they belong.
-        </p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-stone-200 font-mono text-xs">
-          <div>
-            <span class="block text-stone-800/50 text-[10px] uppercase">Focus</span>
-            <span>Outdoor &amp; Travel</span>
-          </div>
-          <div>
-            <span class="block text-stone-800/50 text-[10px] uppercase">Approach</span>
-            <span>Natural &amp; Strobe</span>
-          </div>
-          <div>
-            <span class="block text-stone-800/50 text-[10px] uppercase">Archive</span>
-            <a href="https://wcphelan.exposure.co" target="_blank" rel="noopener" class="underline underline-offset-4 hover:text-rust">Exposure Essays &nearr;</a>
-          </div>
+  <!-- CHAPTER 01: PERSONAL & OUTDOOR LIFESTYLE WORK (EXPOSURE TIMELINE REEL) -->
+  <section id="field-work" class="py-24 md:py-32 border-t border-stone-200 bg-stone-50">
+    
+    <!-- Section Header & Interactive Shoot Timeline Bar -->
+    <div class="px-6 md:px-12 max-w-[1440px] mx-auto mb-10 reveal">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-stone-200">
+        <div>
+          <span class="font-mono text-xs tracking-widest uppercase text-rust">01 / Field &amp; Brand Archive</span>
+          <h2 class="font-serif text-4xl md:text-5xl mt-2 leading-tight">
+            Dispatches from the field.
+          </h2>
         </div>
+        <div class="flex items-center gap-6 font-mono text-xs text-stone-800/70">
+          <span>Select a story or scroll gallery &rarr;</span>
+          <a href="https://wcphelan.exposure.co" target="_blank" rel="noopener" class="underline underline-offset-4 text-stone-900 hover:text-rust transition">
+            Full Exposure Essays &nearr;
+          </a>
+        </div>
+      </div>
+
+      <!-- Shoot Selector Bar (Jimmy Chin-inspired timeline, using Exposure Shoot Names) -->
+      <div id="shoot-tabs" class="flex items-center gap-6 md:gap-10 overflow-x-auto py-5 no-scrollbar border-b border-stone-200 font-mono text-xs uppercase tracking-wider">
+        <button data-shoot="0" class="shoot-tab active-tab whitespace-nowrap pb-1 border-b-2 border-rust text-stone-900 font-medium transition">
+          01. Wind River High Route
+        </button>
+        <button data-shoot="1" class="shoot-tab whitespace-nowrap pb-1 border-b-2 border-transparent text-stone-800/50 hover:text-stone-900 transition">
+          02. Teton Dawn Patrol
+        </button>
+        <button data-shoot="2" class="shoot-tab whitespace-nowrap pb-1 border-b-2 border-transparent text-stone-800/50 hover:text-stone-900 transition">
+          03. Desert Tower Reconnaissance
+        </button>
+        <button data-shoot="3" class="shoot-tab whitespace-nowrap pb-1 border-b-2 border-transparent text-stone-800/50 hover:text-stone-900 transition">
+          04. Sawtooth Alpine Camp
+        </button>
       </div>
     </div>
 
-    <!-- Editorial Staggered Gallery Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
-      <!-- Image 1: Large Vertical -->
-      <div class="md:col-span-7 reveal">
-        <div class="img-frame aspect-[4/5] bg-stone-200">
-          <img 
-            src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1400&q=85" 
-            alt="Hiker moving along high alpine trail" 
-            class="w-full h-full object-cover"
-          />
-        </div>
-        <p class="font-mono text-[11px] text-stone-800/60 mt-3">
-          FIG 02. Wind River Traverse &mdash; Environmental scale &amp; product-in-use narrative.
-        </p>
-      </div>
-
-      <!-- Image 2 + Brand Footnote -->
-      <div class="md:col-span-5 flex flex-col justify-between space-y-12 reveal">
-        <div class="brand-footnote bg-stone-100/80 p-5">
-          <p class="font-mono text-[11px] uppercase tracking-wider text-rust">
-            Marketing Spec [02] &mdash; Campaign Cohesiveness
-          </p>
-          <p class="text-sm text-stone-800/90 mt-2 leading-relaxed">
-            Having managed brand email, social, and ambassador ecosystems firsthand, I shoot with your entire funnel in mind: hero banner anchors, email header crops, and texture close-ups for lifecycle flows.
-          </p>
-        </div>
-
-        <div>
-          <div class="img-frame aspect-[4/3] bg-stone-200">
-            <img 
-              src="https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=1200&q=85" 
-              alt="Camp setup at dusk with warm lantern glow" 
-              class="w-full h-full object-cover"
-            />
+    <!-- Full-Bleed Horizontal 3-Image Viewport with Top-Corner Note Box & Scroll Arrows -->
+    <div class="relative max-w-[1440px] mx-auto px-6 md:px-12 reveal">
+      <div class="relative w-full h-[65vh] min-h-[480px] max-h-[760px] bg-stone-200 overflow-hidden">
+        
+        <!-- Top-Left Corner Info Box (Styled like Brand Footnote Callout, Zero Dark Overlay on Photos) -->
+        <div class="absolute top-5 left-5 md:top-8 md:left-8 z-20 max-w-xs sm:max-w-sm bg-stone-50/95 backdrop-blur-sm p-5 md:p-6 shadow-sm border border-stone-200">
+          <div class="brand-footnote">
+            <p id="shoot-kicker" class="font-mono text-[10px] uppercase tracking-widest text-rust">
+              Field Essay [01 / 04] &mdash; Wyoming
+            </p>
+            <h3 id="shoot-title" class="font-serif text-2xl text-stone-900 mt-1 leading-snug">
+              Wind River High Route
+            </h3>
+            <p id="shoot-desc" class="text-xs text-stone-800/85 mt-2 leading-relaxed font-light">
+              Five days above treeline testing ultralight shelter systems and alpine shells. Framed with wide negative space for campaign hero banners and multi-ratio social crops.
+            </p>
           </div>
-          <p class="font-mono text-[11px] text-stone-800/60 mt-3">
-            FIG 03. Blue Hour Basecamp &mdash; Balancing ambient twilight with practical gear illumination.
-          </p>
+          <div class="mt-4 pt-3 border-t border-stone-200 flex items-center justify-between font-mono text-[10px] text-stone-800/60">
+            <span id="shoot-deliverable">Deliverable: 45 Selects / Strobe + Natural</span>
+            <span id="slide-counter">1 / 3</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Full-Width Triptych Row -->
-      <div class="md:col-span-4 reveal">
-        <div class="img-frame aspect-[3/4] bg-stone-200">
-          <img 
-            src="https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=1000&q=85" 
-            alt="Climber preparing gear on granite" 
-            class="w-full h-full object-cover"
-          />
+        <!-- Left / Right Horizontal Scroll Arrows -->
+        <div class="absolute bottom-5 right-5 md:bottom-8 md:right-8 z-20 flex items-center gap-2">
+          <button id="reel-prev" aria-label="Previous image" class="w-11 h-11 bg-stone-50/95 hover:bg-stone-900 text-stone-900 hover:text-stone-50 border border-stone-200 flex items-center justify-center font-mono text-sm transition shadow-sm">
+            &larr;
+          </button>
+          <button id="reel-next" aria-label="Next image" class="w-11 h-11 bg-stone-50/95 hover:bg-stone-900 text-stone-900 hover:text-stone-50 border border-stone-200 flex items-center justify-center font-mono text-sm transition shadow-sm">
+            &rarr;
+          </button>
         </div>
-        <p class="font-mono text-[11px] text-stone-800/60 mt-2.5">
-          FIG 04. Tactile Detail / Hardware &amp; Craft.
-        </p>
-      </div>
 
-      <div class="md:col-span-4 reveal" style="transition-delay: 100ms;">
-        <div class="img-frame aspect-[3/4] bg-stone-200">
-          <img 
-            src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=1000&q=85" 
-            alt="Morning coffee by river camp" 
-            class="w-full h-full object-cover"
-          />
+        <!-- Horizontal Scrolling Track (3 Images per Shoot, No Dark Overlay) -->
+        <div id="shoot-reel" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+          <!-- Slide 1 -->
+          <div class="reel-slide w-full md:w-[78%] lg:w-[72%] h-full flex-shrink-0 snap-start pr-3">
+            <img id="shoot-img-1" src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1800&q=85" alt="Shoot frame 1" class="w-full h-full object-cover" />
+          </div>
+          <!-- Slide 2 -->
+          <div class="reel-slide w-full md:w-[78%] lg:w-[72%] h-full flex-shrink-0 snap-start pr-3">
+            <img id="shoot-img-2" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85" alt="Shoot frame 2" class="w-full h-full object-cover" />
+          </div>
+          <!-- Slide 3 -->
+          <div class="reel-slide w-full md:w-[78%] lg:w-[72%] h-full flex-shrink-0 snap-start">
+            <img id="shoot-img-3" src="https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=1800&q=85" alt="Shoot frame 3" class="w-full h-full object-cover" />
+          </div>
         </div>
-        <p class="font-mono text-[11px] text-stone-800/60 mt-2.5">
-          FIG 05. Quiet Rituals / Lifestyle &amp; Hospitality.
-        </p>
-      </div>
 
-      <div class="md:col-span-4 reveal" style="transition-delay: 200ms;">
-        <div class="img-frame aspect-[3/4] bg-stone-200">
-          <img 
-            src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1000&q=85" 
-            alt="Backcountry ski tour in winter" 
-            class="w-full h-full object-cover"
-          />
-        </div>
-        <p class="font-mono text-[11px] text-stone-800/60 mt-2.5">
-          FIG 06. Winter Operations / Four-Season Capability.
-        </p>
       </div>
     </div>
   </section>
-
   <!-- CHAPTER 02: HIGH-VOLUME PRODUCTION & DOCUMENTARY PROOF (WEDDINGS / THE PHELANS) -->
   <section id="production" class="py-24 md:py-36 px-6 md:px-12 bg-stone-900 text-stone-50">
     <div class="max-w-[1440px] mx-auto">
